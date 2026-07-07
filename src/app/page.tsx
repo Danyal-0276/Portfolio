@@ -12,6 +12,7 @@ import Research from "@/components/sections/Research";
 import Philosophy from "@/components/sections/Philosophy";
 import Contact from "@/components/sections/Contact";
 import Nav from "@/components/dom/Nav";
+import CursorGlow from "@/components/background/CursorGlow";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,12 +26,16 @@ const chapters = [
   "Contact",
 ];
 
+// Dark sections (inverted header + nav)
+const DARK_SECTIONS = [0, 3, 5];
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
 
-  /* ── Lenis smooth scroll + GSAP integration ── */
+  /* ── Lenis smooth scroll + GSAP ── */
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -38,128 +43,86 @@ export default function Home() {
       smoothWheel: true,
     });
 
-    // Connect Lenis to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
+    lenis.on("scroll", ({ scroll }: { scroll: number }) => {
+      setHeaderScrolled(scroll > 60);
+    });
+
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
-    // Loading gate
     const timer = setTimeout(() => setLoading(false), 1800);
 
     return () => {
       lenis.destroy();
       clearTimeout(timer);
-      gsap.ticker.remove(lenis.raf as unknown as gsap.TickerCallback);
     };
   }, []);
 
-  /* ── Global GSAP reveal animations ── */
+  /* ── Global scroll-reveal animations ── */
   useEffect(() => {
     if (loading) return;
 
     const ctx = gsap.context(() => {
-      // Reveal-up elements
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+      const revealUp = gsap.utils.toArray<HTMLElement>(".reveal-up");
+      revealUp.forEach((el) => {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            end: "top 20%",
-            toggleActions: "play none none none",
-          },
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
+          y: 0, opacity: 1, duration: 0.9, ease: "power3.out",
         });
       });
 
-      // Reveal-left elements
-      gsap.utils.toArray<HTMLElement>(".reveal-left").forEach((el) => {
+      const revealLeft = gsap.utils.toArray<HTMLElement>(".reveal-left");
+      revealLeft.forEach((el) => {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
+          x: 0, opacity: 1, duration: 1, ease: "power3.out",
         });
       });
 
-      // Reveal-right elements
-      gsap.utils.toArray<HTMLElement>(".reveal-right").forEach((el) => {
+      const revealRight = gsap.utils.toArray<HTMLElement>(".reveal-right");
+      revealRight.forEach((el) => {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          x: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
+          x: 0, opacity: 1, duration: 1, ease: "power3.out",
         });
       });
 
-      // Reveal-scale elements
-      gsap.utils.toArray<HTMLElement>(".reveal-scale").forEach((el) => {
+      const revealScale = gsap.utils.toArray<HTMLElement>(".reveal-scale");
+      revealScale.forEach((el) => {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          scale: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
+          scale: 1, opacity: 1, duration: 1, ease: "power3.out",
         });
       });
 
-      // Reveal-fade elements
-      gsap.utils.toArray<HTMLElement>(".reveal-fade").forEach((el) => {
+      const revealFade = gsap.utils.toArray<HTMLElement>(".reveal-fade");
+      revealFade.forEach((el) => {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-          opacity: 1,
-          duration: 1.2,
-          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
+          opacity: 1, duration: 1.2, ease: "power2.out",
         });
       });
 
-      // Stagger children: elements with data-stagger
+      // Stagger containers
       gsap.utils.toArray<HTMLElement>("[data-stagger]").forEach((container) => {
-        const children = container.children;
         gsap.fromTo(
-          children,
+          Array.from(container.children),
           { y: 40, opacity: 0 },
           {
-            scrollTrigger: {
-              trigger: container,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
+            scrollTrigger: { trigger: container, start: "top 85%", toggleActions: "play none none none" },
+            y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out",
           }
         );
       });
 
-      // Section tracking for nav dots
-      gsap.utils.toArray<HTMLElement>(".section").forEach((section, i) => {
+      // Header color on dark sections
+      const sections = gsap.utils.toArray<HTMLElement>(".section");
+      sections.forEach((section, i) => {
         ScrollTrigger.create({
           trigger: section,
-          start: "top center",
-          end: "bottom center",
+          start: "top 50%",
+          end: "bottom 50%",
           onEnter: () => setActiveSection(i),
           onEnterBack: () => setActiveSection(i),
         });
@@ -172,31 +135,59 @@ export default function Home() {
   if (loading) {
     return (
       <div className="loading-overlay">
-        <div
-          style={{
-            width: "50px",
-            height: "3px",
-            background:
-              "linear-gradient(90deg, transparent, var(--accent), transparent)",
-            borderRadius: "100px",
-            animation: "pulse-soft 1.5s infinite",
-          }}
-        />
+        <div style={{
+          width: "1px",
+          height: "60px",
+          background: "linear-gradient(180deg, var(--accent), transparent)",
+          animation: "pulse-soft 1.5s infinite",
+          marginBottom: "1rem",
+        }} />
         <div className="loader-name">Danyal Tanveer</div>
-        <div className="loader-sub">loading portfolio</div>
+        <div className="loader-sub">initializing portfolio</div>
+        <div style={{
+          width: "180px",
+          height: "2px",
+          background: "var(--stone-200)",
+          borderRadius: "100px",
+          overflow: "hidden",
+          marginTop: "1.5rem",
+        }}>
+          <div style={{
+            height: "100%",
+            width: "0%",
+            background: "var(--accent)",
+            borderRadius: "100px",
+            animation: "grow 1.5s ease forwards",
+          }} />
+        </div>
+        <style>{`
+          @keyframes grow { to { width: 100%; } }
+        `}</style>
       </div>
     );
   }
 
+  const isDark = DARK_SECTIONS.includes(activeSection);
+
   return (
     <div ref={mainRef}>
-      {/* Header bar */}
-      <header className="header-bar" id="header">
+      {/* Cursor glow effect */}
+      <CursorGlow />
+
+      {/* Sticky header */}
+      <header
+        className={`header-bar ${headerScrolled ? "scrolled" : ""} ${isDark ? "on-dark" : ""}`}
+        style={{ color: isDark ? "#fff" : "var(--stone-900)" }}
+      >
         <div className="header-name">
-          <img src="/logo.png" alt="" className="header-logo" />
+          <img src="/logo.png" alt="DT" className="header-logo" />
           <span>Danyal Tanveer</span>
         </div>
-        <a href="mailto:danyaltanveer0276@gmail.com" className="btn btn-outline" style={{ fontSize: '0.75rem', padding: '0.45rem 1rem' }}>
+        <a
+          href="mailto:danyaltanveer0276@gmail.com"
+          className={`btn ${isDark ? "btn-dark" : "btn-outline"}`}
+          style={{ fontSize: "0.75rem", padding: "0.45rem 1rem" }}
+        >
           Get in Touch
         </a>
       </header>
@@ -204,7 +195,7 @@ export default function Home() {
       {/* Navigation dots */}
       <Nav chapters={chapters} activeSection={activeSection} />
 
-      {/* Sections — alternating light/dark */}
+      {/* Sections */}
       <Hero />
       <Origin />
       <Skills />
