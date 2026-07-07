@@ -31,9 +31,22 @@ export default function CinematicShell() {
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.4, smoothWheel: true });
 
+    lenis.on('scroll', ScrollTrigger.update);
+
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value) {
+        if (arguments.length && value !== undefined) {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+      },
+    });
+
     function raf(time: number) {
       lenis.raf(time * 1000);
-      ScrollTrigger.update();
     }
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
@@ -42,11 +55,15 @@ export default function CinematicShell() {
       setScrolled(scroll > 80);
     });
 
-    const loadTimer = setTimeout(() => setReady(true), 1600);
+    const loadTimer = setTimeout(() => {
+      setReady(true);
+      ScrollTrigger.refresh();
+    }, 1600);
 
     return () => {
       lenis.destroy();
       gsap.ticker.remove(raf);
+      ScrollTrigger.scrollerProxy(document.documentElement, {});
       clearTimeout(loadTimer);
     };
   }, []);
@@ -110,7 +127,12 @@ export default function CinematicShell() {
       ScrollTrigger.refresh();
     }, mainRef);
 
-    return () => ctx.revert();
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 400);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, [ready]);
 
   if (!ready) {

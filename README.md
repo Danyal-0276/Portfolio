@@ -1,19 +1,16 @@
-﻿# Danyal Tanveer — 3D Portfolio
+﻿# Danyal Tanveer — Portfolio
 
-An immersive **3D corridor portfolio** built with **Next.js**, **React Three Fiber**, and scroll-driven camera flight. Visitors fly through seven narrative rooms — from ID badge intro through project dioramas, ML research, Jarvis synthesis, and a contact desk — with automatic 2D fallback on low-end devices or reduced-motion preferences.
-
-**Deployment target:** [Vercel](https://vercel.com)
+A **cinematic scroll portfolio** inspired by high-motion athlete/storytelling sites — built with **Next.js**, **GSAP ScrollTrigger**, **Lenis**, and **shadcn-style UI components**.
 
 ---
 
 ## Highlights
 
-- **Continuous 3D corridor** — Single full-viewport R3F canvas with `CameraRig` interpolating along Catmull-Rom spline keyframes
-- **Seven narrative rooms** — Hero (ID badge), Origin shelf, Skills constellation, Build corridor dioramas, Research lab, Philosophy sphere, Contact desk
-- **Scroll-driven flight** — Native scroll maps to global progress; chapter nav jumps along the camera path
-- **Device tiering** — High/mid/low capability detection; bloom + vignette post-FX on high-tier only
-- **Accessible fallback** — `ProjectCard2D` swaps in the full scroll-based portfolio when WebGL is unavailable or `prefers-reduced-motion` is set
-- **Real project data** — TRAK, POS Ecosystem, BERT benchmark, NIDS, and J.A.R.V.I.S from `src/lib/projects.ts`
+- **Animated gradient background** — Living mesh of color orbs, vignette, and film grain (no flat black)
+- **Cinematic scroll storytelling** — Pinned horizontal project gallery, stagger reveals, split panels
+- **Lando-style UX patterns** — Fullscreen menu, tech marquees, hover crossfade project grid, bold condensed typography
+- **shadcn/ui components** — Button, Badge, Card, Sheet (Radix-based)
+- **Real project content** — TRAK, POS Ecosystem, BERT benchmark, NIDS, J.A.R.V.I.S
 
 ---
 
@@ -21,43 +18,10 @@ An immersive **3D corridor portfolio** built with **Next.js**, **React Three Fib
 
 | Layer | Technologies |
 | --- | --- |
-| **Framework** | Next.js 16 (App Router), React 19, TypeScript |
-| **3D** | Three.js, @react-three/fiber, @react-three/drei, @react-three/postprocessing |
-| **Animation** | GSAP, Framer Motion, Lenis (2D fallback) |
-| **State** | Zustand |
-
----
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── layout.tsx
-│   ├── page.tsx              # Device detection → 3D or 2D fallback
-│   └── globals.css
-├── components/
-│   ├── canvas/
-│   │   ├── Experience.tsx    # Root Canvas
-│   │   ├── CameraRig.tsx     # Spline camera interpolation
-│   │   ├── rooms/            # 7 chapter rooms
-│   │   ├── objects/          # IDBadge, ProjectDiorama, ParticleSphere, ResumeDocument
-│   │   └── fx/PostFX.tsx     # Bloom + vignette (high tier)
-│   ├── dom/
-│   │   ├── ChapterLabel.tsx
-│   │   ├── ChapterOverlay.tsx
-│   │   ├── ProjectCard2D.tsx # Accessible fallback
-│   │   └── Nav.tsx
-│   ├── sections/             # Used by 2D fallback
-│   └── ExperienceShell.tsx   # Scroll orchestration + DOM chrome
-└── lib/
-    ├── store.ts
-    ├── cameraPaths.ts
-    ├── deviceCapability.ts
-    ├── projects.ts
-    ├── materials.ts
-    └── hooks.ts
-```
+| Framework | Next.js 16, React 19, TypeScript |
+| Animation | GSAP + ScrollTrigger, Lenis smooth scroll |
+| UI | Tailwind CSS 4, Radix UI, lucide-react, CVA |
+| Styling | Bebas Neue + Inter + JetBrains Mono |
 
 ---
 
@@ -68,9 +32,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Scroll to fly the camera through the corridor. Use the right-side nav dots to jump chapters.
-
-### Production
+Open [http://localhost:3000](http://localhost:3000) and scroll — the project corridor section pins and scrolls horizontally.
 
 ```bash
 npm run build
@@ -79,24 +41,25 @@ npm start
 
 ---
 
-## Chapters
+## Sections
 
-| # | Room | 3D Feature |
-| --- | --- | --- |
-| I | Hero | Portrait ID badge with HUD clip on scroll |
-| II | Origin | 18 JS mini-project instanced cubes on a shelf |
-| III | Stack | Orbiting skill node constellation |
-| IV | The Build | 5 project dioramas in a corridor |
-| V | Research | Floating confusion-matrix panels |
-| VI | Philosophy | Jarvis particle sphere |
-| VII | Contact | Desk with résumé mesh + link objects |
+| Section | Interaction |
+| --- | --- |
+| **Hero** | Massive typography, portrait, stats, lime CTAs |
+| **Tech Marquee** | Dual infinite ticker of skills |
+| **Quote** | Personal statement |
+| **Project Corridor** | GSAP-pinned horizontal scroll gallery |
+| **Split Panels** | Production vs Research full-bleed panels |
+| **Flagship Grid** | Hover crossfade project cards |
+| **Research** | Animated bar chart skyline |
+| **Philosophy** | Jarvis terminal + particle sphere |
+| **Contact** | Link cards + footer |
 
 ---
 
 ## Author
 
-**Danyal Tanveer** — Final-year CS undergrad at UCP. Full-stack engineer and NLP/ML researcher.
+**Danyal Tanveer** — Full-Stack Engineer · NLP/ML Researcher · UCP
 
 - Email: [danyaltanveer0276@gmail.com](mailto:danyaltanveer0276@gmail.com)
 - GitHub: [@Danyal-0276](https://github.com/Danyal-0276)
-- LinkedIn: [danyal-tanveer](https://linkedin.com/in/danyal-tanveer)

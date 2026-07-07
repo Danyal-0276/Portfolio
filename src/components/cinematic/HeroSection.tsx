@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowDown, Github, Mail } from 'lucide-react';
+import { ArrowDown, Code2, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -73,7 +73,7 @@ export default function HeroSection() {
           <Mail className="h-4 w-4" />
         </a>
         <a href="https://github.com/Danyal-0276" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <Github className="h-4 w-4" />
+          <Code2 className="h-4 w-4" />
         </a>
       </div>
     </section>

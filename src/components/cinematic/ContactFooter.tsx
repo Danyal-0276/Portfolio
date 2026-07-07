@@ -1,12 +1,12 @@
 'use client';
 
-import { Github, Linkedin, Mail, Download } from 'lucide-react';
+import { Code2, Link2, Mail, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const links = [
   { icon: Mail, label: 'Email', val: 'danyaltanveer0276@gmail.com', href: 'mailto:danyaltanveer0276@gmail.com' },
-  { icon: Github, label: 'GitHub', val: '@Danyal-0276', href: 'https://github.com/Danyal-0276' },
-  { icon: Linkedin, label: 'LinkedIn', val: 'danyal-tanveer', href: 'https://linkedin.com/in/danyal-tanveer' },
+  { icon: Code2, label: 'GitHub', val: '@Danyal-0276', href: 'https://github.com/Danyal-0276' },
+  { icon: Link2, label: 'LinkedIn', val: 'danyal-tanveer', href: 'https://linkedin.com/in/danyal-tanveer' },
   { icon: Download, label: 'Résumé', val: 'PDF Download', href: '/resume/Danyal_Tanveer-Resume.pdf', download: true },
 ];
 

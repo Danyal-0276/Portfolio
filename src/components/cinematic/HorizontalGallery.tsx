@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -69,7 +69,7 @@ export default function HorizontalGallery() {
             target="_blank"
             rel="noopener noreferrer"
             className="moment-card"
-            style={{ '--accent': m.color } as React.CSSProperties}
+            style={{ '--accent': m.color } as CSSProperties}
           >
             <div className="moment-card-image">
               <Image src={m.image} alt={m.title} fill sizes="400px" className="object-cover" />
