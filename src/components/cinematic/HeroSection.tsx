@@ -1,0 +1,81 @@
+'use client';
+
+import Image from 'next/image';
+import { ArrowDown, Github, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+
+export default function HeroSection() {
+  return (
+    <section id="hero" className="cine-section hero-section">
+      <div className="hero-inner">
+        <Badge variant="default" className="hero-badge reveal-up">
+          Final-Year CS · UCP · 2026
+        </Badge>
+
+        <h1 className="hero-title">
+          <span className="hero-line reveal-up" data-delay="0.1">DANYAL</span>
+          <span className="hero-line hero-outline reveal-up" data-delay="0.2">TANVEER</span>
+        </h1>
+
+        <p className="hero-sub reveal-up" data-delay="0.35">
+          Full-Stack Engineer · NLP/ML Researcher
+        </p>
+
+        <p className="hero-desc reveal-up" data-delay="0.45">
+          Production backends, Transformer ensembles, and cinematic digital experiences —
+          from live restaurant POS systems to fake-news detection at scale.
+        </p>
+
+        <div className="hero-actions reveal-up" data-delay="0.55">
+          <Button asChild size="lg">
+            <a href="#projects">Explore The Build</a>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <a href="/resume/Danyal_Tanveer-Resume.pdf" download>Download CV</a>
+          </Button>
+        </div>
+
+        <div className="hero-stats reveal-up" data-delay="0.65">
+          {[
+            { n: '5+', l: 'Flagship Projects' },
+            { n: '10', l: 'ML Models' },
+            { n: '2', l: 'Live Clients' },
+            { n: '20+', l: 'Repositories' },
+          ].map((s) => (
+            <div key={s.l} className="hero-stat">
+              <span className="hero-stat-n">{s.n}</span>
+              <span className="hero-stat-l">{s.l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="hero-portrait reveal-scale" data-delay="0.3">
+        <div className="hero-portrait-ring" />
+        <Image
+          src="/textures/portrait.png"
+          alt="Danyal Tanveer"
+          width={320}
+          height={400}
+          className="hero-portrait-img"
+          priority
+        />
+      </div>
+
+      <div className="hero-scroll-hint reveal-up" data-delay="0.8">
+        <span>Scroll to drive</span>
+        <ArrowDown className="h-4 w-4 animate-bounce" />
+      </div>
+
+      <div className="hero-social reveal-up" data-delay="0.7">
+        <a href="mailto:danyaltanveer0276@gmail.com" aria-label="Email">
+          <Mail className="h-4 w-4" />
+        </a>
+        <a href="https://github.com/Danyal-0276" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <Github className="h-4 w-4" />
+        </a>
+      </div>
+    </section>
+  );
+}

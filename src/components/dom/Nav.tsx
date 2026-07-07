@@ -5,10 +5,15 @@ interface NavProps {
   chapters: string[];
   activeSection: number;
   isDark: boolean;
+  onChapterClick?: (index: number) => void;
 }
 
-export default function Nav({ chapters, activeSection, isDark }: NavProps) {
+export default function Nav({ chapters, activeSection, isDark, onChapterClick }: NavProps) {
   const handleClick = (i: number) => {
+    if (onChapterClick) {
+      onChapterClick(i);
+      return;
+    }
     const sections = document.querySelectorAll(".section[data-section]");
     sections[i]?.scrollIntoView({ behavior: "smooth" });
   };
