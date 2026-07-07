@@ -1,204 +1,74 @@
 "use client";
+import React, { useState } from "react";
 
-import React, { useState, useRef } from "react";
-
-const contactItems = [
-  {
-    icon: "✉️",
-    label: "Email",
-    value: "danyaltanveer0276@gmail.com",
-    action: "Send Message",
-    href: "mailto:danyaltanveer0276@gmail.com",
-    color: "#e63946",
-  },
-  {
-    icon: "💻",
-    label: "GitHub",
-    value: "github.com/Danyal-0276",
-    action: "View Repos",
-    href: "https://github.com/Danyal-0276",
-    color: "#6366f1",
-  },
-  {
-    icon: "🤝",
-    label: "LinkedIn",
-    value: "linkedin.com/in/danyal-tanveer",
-    action: "Connect",
-    href: "https://linkedin.com/in/danyal-tanveer",
-    color: "#06b6d4",
-  },
-  {
-    icon: "📄",
-    label: "Résumé",
-    value: "Danyal_Tanveer-Resume.pdf",
-    action: "Download PDF",
-    href: "/resume/Danyal_Tanveer-Resume.pdf",
-    download: true,
-    color: "#10b981",
-  },
+const links = [
+  { icon: "✉", label: "Email", val: "danyaltanveer0276@gmail.com", href: "mailto:danyaltanveer0276@gmail.com", color: "#e63946", action: "Send Message" },
+  { icon: "⌥", label: "GitHub", val: "github.com/Danyal-0276",         href: "https://github.com/Danyal-0276",                  color: "#6366f1", action: "Browse Repos" },
+  { icon: "◈", label: "LinkedIn", val: "linkedin.com/in/danyal-tanveer", href: "https://linkedin.com/in/danyal-tanveer",          color: "#06b6d4", action: "Connect" },
+  { icon: "↓", label: "Résumé",   val: "Danyal_Tanveer-Resume.pdf",       href: "/resume/Danyal_Tanveer-Resume.pdf",              color: "#10b981", action: "Download PDF", download: true },
 ];
 
 export default function Contact() {
-  const [hovered, setHovered] = useState<number | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [hov, setHov] = useState<number | null>(null);
 
   return (
-    <section
-      ref={sectionRef}
-      className="section section-warm section-padding"
-      data-section="6"
-    >
-      <div className="container-narrow">
+    <section className="section section-warm section-pad" data-section="6">
+      <div className="container-sm">
 
-        {/* Header */}
         <div style={{ marginBottom: "5rem", textAlign: "center" }}>
-          <div className="label-mono reveal-up" style={{ color: "var(--accent)", marginBottom: "0.75rem" }}>
-            Chapter VII — Contact
-          </div>
-          <h2 className="heading-large reveal-up" style={{ color: "var(--stone-900)" }}>
+          <div className="label" data-up style={{ marginBottom: "0.75rem" }}>Chapter VII — Contact</div>
+          <h2 data-up style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "var(--stone-900)", lineHeight: 1.05 }}>
             Let&apos;s build<br />
-            <span className="text-gradient-accent">something great.</span>
+            <span style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-soft))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>something great.</span>
           </h2>
-          <p className="body-text reveal-up" style={{ maxWidth: "480px", margin: "1.25rem auto 0" }}>
-            Open to full-stack engineering roles, NLP development projects, and technical collaborations. The corridor ends here.
+          <p data-up style={{ fontSize: "0.95rem", color: "var(--stone-500)", maxWidth: "440px", margin: "1.25rem auto 0", lineHeight: 1.75 }}>
+            Open to full-stack engineering roles, NLP projects, and technical collaborations.
           </p>
         </div>
 
-        {/* Contact cards */}
-        <div
-          data-stagger
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "1.25rem",
-            marginBottom: "5rem",
-          }}
-        >
-          {contactItems.map((item, i) => (
-            <div
-              key={i}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
+        {/* Cards */}
+        <div data-stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "5rem" }}>
+          {links.map((l, i) => (
+            <div key={i} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
               style={{
-                background: "#fff",
-                borderRadius: "16px",
-                padding: "2rem 1.5rem",
-                border: `1px solid ${hovered === i ? `${item.color}40` : "var(--stone-200)"}`,
-                boxShadow: hovered === i ? `0 12px 40px ${item.color}15` : "0 2px 12px rgba(0,0,0,0.03)",
-                transition: "all 0.3s var(--ease-out-expo)",
-                transform: hovered === i ? "translateY(-6px)" : "translateY(0)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              {/* Icon */}
-              <div style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                background: `${item.color}10`,
-                border: `1px solid ${item.color}20`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.3rem",
-                marginBottom: "0.5rem",
+                background: "#fff", borderRadius: 14, padding: "2rem 1.5rem",
+                border: `1px solid ${hov === i ? `${l.color}40` : "var(--stone-200)"}`,
+                boxShadow: hov === i ? `0 14px 44px ${l.color}14` : "0 2px 12px rgba(0,0,0,0.03)",
+                transform: hov === i ? "translateY(-6px)" : "translateY(0)",
+                transition: "all 0.3s ease",
+                display: "flex", flexDirection: "column", gap: "0.5rem",
               }}>
-                {item.icon}
+              <div style={{ width: 42, height: 42, borderRadius: 10, background: `${l.color}12`, border: `1px solid ${l.color}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", marginBottom: "0.5rem", color: l.color, fontFamily: "var(--font-mono)", fontWeight: 700 }}>
+                {l.icon}
               </div>
-
-              <div style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                fontSize: "0.9rem",
-                color: "var(--stone-800)",
-              }}>
-                {item.label}
-              </div>
-
-              <div style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.65rem",
-                color: "var(--stone-400)",
-                wordBreak: "break-all",
-              }}>
-                {item.value}
-              </div>
-
-              {/* Action link */}
-              {item.download ? (
-                <a
-                  href={item.href}
-                  download
-                  style={{
-                    marginTop: "auto",
-                    paddingTop: "1rem",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 600,
-                    fontSize: "0.78rem",
-                    color: item.color,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                  }}
-                >
-                  {item.action} ↓
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.9rem", color: "var(--stone-800)" }}>{l.label}</div>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.63rem", color: "var(--stone-400)", wordBreak: "break-all" }}>{l.val}</div>
+              {l.download ? (
+                <a href={l.href} download style={{ marginTop: "auto", paddingTop: "1rem", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.78rem", color: l.color, textDecoration: "none" }}>
+                  {l.action} ↓
                 </a>
               ) : (
-                <a
-                  href={item.href}
-                  target={item.href.startsWith("mailto") ? "_self" : "_blank"}
-                  rel="noopener noreferrer"
-                  style={{
-                    marginTop: "auto",
-                    paddingTop: "1rem",
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 600,
-                    fontSize: "0.78rem",
-                    color: item.color,
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                  }}
-                >
-                  {item.action} ↗
+                <a href={l.href} target={l.href.startsWith("mailto") ? "_self" : "_blank"} rel="noopener noreferrer" style={{ marginTop: "auto", paddingTop: "1rem", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.78rem", color: l.color, textDecoration: "none" }}>
+                  {l.action} ↗
                 </a>
               )}
             </div>
           ))}
         </div>
 
-        {/* Divider */}
-        <div style={{ borderTop: "1px solid var(--stone-200)", paddingTop: "3rem", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.5rem", color: "var(--stone-900)", marginBottom: "0.5rem" }}>
+        {/* Footer */}
+        <div style={{ borderTop: "1px solid var(--stone-200)", paddingTop: "3rem", textAlign: "center" }} data-fade>
+          <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.6rem", color: "var(--stone-900)", marginBottom: "0.5rem" }}>
             Danyal Tanveer
           </div>
-          <div className="label-mono" style={{ color: "var(--stone-400)" }}>
-            Full-Stack Developer · NLP/ML Engineer · UCP 2026
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--stone-400)" }}>
+            Full-Stack Developer · NLP/ML Researcher · UCP 2026
           </div>
-          <div style={{ marginTop: "1.5rem", fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--stone-300)" }}>
-            Built with Next.js 15 · Three.js · GSAP · Lenis · Framer Motion
+          <div style={{ marginTop: "1.5rem", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--stone-300)" }}>
+            Built with Next.js 15 · React Three Fiber · GSAP · Lenis
           </div>
-
-          {/* Accent line */}
-          <div style={{
-            width: "1px",
-            height: "60px",
-            background: "linear-gradient(180deg, var(--accent), transparent)",
-            margin: "1.5rem auto 0",
-            opacity: 0.4,
-          }} />
-          <div style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.65rem",
-            color: "var(--stone-300)",
-            marginTop: "0",
-          }}>
-            end_of_corridor
-          </div>
+          <div style={{ width: 1, height: 50, background: "linear-gradient(180deg, var(--accent), transparent)", margin: "1.5rem auto 0", opacity: 0.4 }} />
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "var(--stone-300)" }}>end_of_corridor</div>
         </div>
       </div>
     </section>
