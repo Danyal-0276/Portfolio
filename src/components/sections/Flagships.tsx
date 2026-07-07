@@ -1,115 +1,76 @@
 "use client";
-
 import React, { useState } from "react";
 
-interface Project {
-  id: string;
-  title: string;
-  tagline: string;
-  description: string;
-  tech: string[];
-  links: Record<string, string>;
-  screenshots: string[];
-  accentColor: string;
-  diorama: string;
-}
-
-const projects: Project[] = [
+const projects = [
   {
     id: "trak",
     title: "TRAK",
     tagline: "AI News Credibility Platform",
-    description:
-      "Capstone project — React Native mobile app + Django REST backend + a 3-model ensemble (RoBERTa, DeBERTa, custom classifier) scoring articles Real / Suspicious / Fake in real-time.",
-    tech: ["React Native", "Django/DRF", "MongoDB", "RoBERTa", "DeBERTa", "JWT"],
+    desc: "React Native mobile app + Django REST backend + a 3-model voting ensemble (RoBERTa · DeBERTa · custom XGBoost) scoring articles Real / Suspicious / Fake in real-time.",
+    tech: ["React Native","Django/DRF","MongoDB","RoBERTa","DeBERTa","JWT","Redis"],
     links: { "App Repo": "https://github.com/Danyal-0276/TRAK", "Backend": "https://github.com/Danyal-0276/TRAK-BACKEND" },
-    screenshots: ["/projects/trak/1.png", "/projects/trak/2.png", "/projects/trak/3.png", "/projects/trak/4.png", "/projects/trak/5.png"],
-    accentColor: "#06b6d4",
-    diorama: "Rotating phone mockup streaming credibility meter",
+    shots: ["/projects/trak/1.png","/projects/trak/2.png","/projects/trak/3.png","/projects/trak/4.png","/projects/trak/5.png"],
+    color: "#06b6d4",
   },
   {
     id: "pos",
     title: "POS Ecosystem",
-    tagline: "Three repos, two live restaurant clients",
-    description:
-      "Commercial-grade point-of-sale system with a Next.js 15 customer frontend, management dashboard (POS-Admin), and a high-performance Express API with Redis caching.",
-    tech: ["Next.js 15", "Express", "MongoDB", "JWT", "Redis", "Swagger"],
-    links: { "Frontend": "https://github.com/Danyal-0276/POS-client", "Admin": "https://github.com/Danyal-0276/POS-Admin", "API": "https://github.com/Danyal-0276/POS-backend" },
-    screenshots: ["/projects/pos/1.jpeg", "/projects/pos/2.jpeg", "/projects/pos/3.jpeg"],
-    accentColor: "#f59e0b",
-    diorama: "Three linked terminal meshes with pulsing connectors",
+    tagline: "Three repos · two live restaurant clients",
+    desc: "Commercial-grade point-of-sale — Next.js 15 customer frontend, management dashboard, and a high-performance Express API with Redis caching and Swagger docs.",
+    tech: ["Next.js 15","Express","MongoDB","Redis","JWT","Swagger"],
+    links: { "Client": "https://github.com/Danyal-0276/POS-client", "Admin": "https://github.com/Danyal-0276/POS-Admin", "API": "https://github.com/Danyal-0276/POS-backend" },
+    shots: ["/projects/pos/1.jpeg","/projects/pos/2.jpeg","/projects/pos/3.jpeg"],
+    color: "#f59e0b",
   },
   {
     id: "bert",
     title: "BERT Benchmark",
-    tagline: "10-model fake news evaluation suite",
-    description:
-      "Deep benchmarking of 10 BERT-family Transformers (RoBERTa, DistilBERT, XLM-R, MobileBERT…) on a 10K fake-news split using PyTorch and HuggingFace, reporting MCC and AUC-ROC.",
-    tech: ["PyTorch", "HuggingFace", "scikit-learn", "Pandas"],
+    tagline: "10-model Transformer evaluation suite",
+    desc: "Deep benchmarking of 10 BERT-family models on a 10K fake-news split using PyTorch and HuggingFace, reporting MCC, AUC-ROC, and F1-micro per architecture.",
+    tech: ["PyTorch","HuggingFace","scikit-learn","Pandas","matplotlib"],
     links: { "Repository": "https://github.com/Danyal-0276/Bert-Based-models-evaluation" },
-    screenshots: ["/projects/bert/1.png", "/projects/bert/2.png"],
-    accentColor: "#8b5cf6",
-    diorama: "Bar-chart skyline — 10 glass columns of model accuracy",
+    shots: ["/projects/bert/1.png","/projects/bert/2.png"],
+    color: "#8b5cf6",
   },
   {
     id: "nids",
     title: "NIDS",
     tagline: "Distributed Network Intrusion Detection",
-    description:
-      "Apache Spark MLlib ensemble (Naive Bayes + LR + GBT + RF) processing CIC-IDS2017 network traffic packets to detect cyber attacks in a distributed PDC pipeline.",
-    tech: ["PySpark 3.5", "Apache Spark", "Naive Bayes", "GBT", "Random Forest"],
+    desc: "Apache Spark MLlib ensemble (Naive Bayes + Logistic Regression + GBT + Random Forest) processing CIC-IDS2017 packets in a distributed PDC pipeline.",
+    tech: ["PySpark 3.5","Apache Spark","GBT","Random Forest","MLlib"],
     links: { "Repository": "https://github.com/Danyal-0276/PDC-Project-Intrusion-Detection-System-" },
-    screenshots: ["/projects/nids/1.png", "/projects/nids/2.png", "/projects/nids/3.png"],
-    accentColor: "#ef4444",
-    diorama: "Glowing shard cluster with Spark pipeline flow",
+    shots: ["/projects/nids/1.png","/projects/nids/2.png","/projects/nids/3.png"],
+    color: "#ef4444",
   },
   {
     id: "jarvis",
     title: "J.A.R.V.I.S",
-    tagline: "Personal Gemini-powered AI assistant",
-    description:
-      "Python desktop AI assistant powered by Google Gemini APIs with speech recognition, text-to-speech (pyttsx3), and a 3D particle-sphere voice visualizer built with Eel.",
-    tech: ["Python", "Eel", "Google Gemini", "SpeechRecognition", "pyttsx3"],
+    tagline: "Gemini-powered personal AI assistant",
+    desc: "Python desktop assistant with Google Gemini APIs, SpeechRecognition, pyttsx3 TTS, and a 3D particle-sphere voice visualizer built with Eel + Three.js.",
+    tech: ["Python","Eel","Google Gemini","SpeechRecognition","pyttsx3"],
     links: { "Repository": "https://github.com/Danyal-0276/Jarvis" },
-    screenshots: [],
-    accentColor: "#3b82f6",
-    diorama: "Breathing particle sphere responding to voice input",
+    shots: [],
+    color: "#3b82f6",
   },
 ];
 
-function Carousel({ screenshots, accent }: { screenshots: string[]; accent: string }) {
+function Carousel({ shots, color }: { shots: string[]; color: string }) {
   const [idx, setIdx] = useState(0);
-  if (!screenshots.length) {
-    return (
-      <div style={{
-        aspectRatio: "16/10",
-        borderRadius: "10px",
-        background: "var(--ink-panel)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        border: "1px solid rgba(255,255,255,0.06)",
-      }}>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--stone-600)" }}>
-          UI coming soon
-        </span>
-      </div>
-    );
-  }
+  if (!shots.length) return (
+    <div className="carousel" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--stone-600)" }}>UI screenshots coming soon</span>
+    </div>
+  );
   return (
-    <div className="carousel-wrap" style={{ background: "#050810" }}>
-      <img src={screenshots[idx]} alt="" />
-      {screenshots.length > 1 && (
+    <div className="carousel">
+      <img src={shots[idx]} alt="" />
+      {shots.length > 1 && (
         <>
-          <button className="carousel-btn carousel-btn-prev" onClick={() => setIdx((i) => (i - 1 + screenshots.length) % screenshots.length)} aria-label="Previous">‹</button>
-          <button className="carousel-btn carousel-btn-next" onClick={() => setIdx((i) => (i + 1) % screenshots.length)} aria-label="Next">›</button>
-          <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "5px" }}>
-            {screenshots.map((_, i) => (
-              <div key={i} onClick={() => setIdx(i)} style={{
-                width: "5px", height: "5px", borderRadius: "50%",
-                background: idx === i ? accent : "rgba(255,255,255,0.25)",
-                cursor: "pointer", transition: "background 0.2s",
-              }} />
+          <button className="carousel-btn" style={{ left: 8 }} onClick={() => setIdx(i => (i - 1 + shots.length) % shots.length)}>‹</button>
+          <button className="carousel-btn" style={{ right: 8 }} onClick={() => setIdx(i => (i + 1) % shots.length)}>›</button>
+          <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
+            {shots.map((_, i) => (
+              <div key={i} onClick={() => setIdx(i)} style={{ width: 5, height: 5, borderRadius: "50%", background: idx === i ? color : "rgba(255,255,255,0.25)", cursor: "pointer", transition: "background 0.2s" }} />
             ))}
           </div>
         </>
@@ -120,161 +81,74 @@ function Carousel({ screenshots, accent }: { screenshots: string[]; accent: stri
 
 export default function Flagships() {
   const [active, setActive] = useState(0);
-  const project = projects[active];
+  const p = projects[active];
 
   return (
-    <section className="section section-dark section-padding-lg" data-section="3">
+    <section className="section section-dark section-pad-lg" data-section="3">
       <div className="container">
 
-        {/* Header */}
         <div style={{ marginBottom: "4rem" }}>
-          <div className="label-mono reveal-up" style={{ color: "var(--accent-soft)", marginBottom: "0.75rem" }}>
-            Chapter IV — Projects
-          </div>
-          <h2 className="heading-large reveal-up" style={{ color: "#fff" }}>
+          <div className="label" data-up style={{ color: "var(--accent-soft)", marginBottom: "0.75rem" }}>Chapter IV — Projects</div>
+          <h2 data-up style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff", lineHeight: 1.05 }}>
             The Build<br />
-            <span className="text-gradient-accent">Corridor.</span>
+            <span style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-soft))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Corridor.</span>
           </h2>
         </div>
 
-        {/* Project tab selector */}
-        <div
-          style={{ display: "flex", gap: "0", marginBottom: "3rem", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
-          className="reveal-up"
-          data-cursor
-        >
-          {projects.map((p, i) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setActive(i)}
+        {/* Project tabs */}
+        <div data-up style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.07)", overflowX: "auto", marginBottom: "3rem" }}>
+          {projects.map((pr, i) => (
+            <button key={pr.id} type="button" onClick={() => setActive(i)}
               style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                fontSize: "0.82rem",
-                padding: "0.75rem 1.5rem",
-                background: "none",
-                border: "none",
-                borderBottom: `2px solid ${active === i ? p.accentColor : "transparent"}`,
-                color: active === i ? "#fff" : "var(--stone-500)",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-                transition: "all 0.25s ease",
-                letterSpacing: "-0.01em",
-                flexShrink: 0,
-              }}
-            >
-              {p.title}
+                fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.82rem",
+                padding: "0.75rem 1.4rem",
+                background: "none", border: "none",
+                borderBottom: `2px solid ${active === i ? pr.color : "transparent"}`,
+                color: active === i ? "#fff" : "rgba(255,255,255,0.35)",
+                cursor: "pointer", whiteSpace: "nowrap",
+                transition: "all 0.25s ease", flexShrink: 0,
+              }}>
+              {pr.title}
             </button>
           ))}
         </div>
 
-        {/* Active project detail */}
-        <div className="grid-2" style={{ alignItems: "start", gap: "3rem" }}>
-
-          {/* Left: info */}
+        {/* Project detail */}
+        <div className="grid-2" style={{ alignItems: "start", gap: "3.5rem" }}>
           <div>
-            <div
-              style={{
-                width: "36px",
-                height: "3px",
-                background: project.accentColor,
-                borderRadius: "2px",
-                marginBottom: "1.5rem",
-                boxShadow: `0 0 12px ${project.accentColor}80`,
-              }}
-            />
-            <h3 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(1.6rem, 4vw, 2.2rem)",
-              fontWeight: 700,
-              color: "#fff",
-              letterSpacing: "-0.03em",
-              marginBottom: "0.4rem",
-            }}>
-              {project.title}
-            </h3>
-            <p style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.72rem",
-              color: project.accentColor,
-              marginBottom: "1.5rem",
-              letterSpacing: "0.04em",
-            }}>
-              {project.tagline}
-            </p>
-            <p style={{ color: "var(--stone-400)", fontSize: "0.95rem", lineHeight: 1.75, marginBottom: "2rem" }}>
-              {project.description}
-            </p>
+            <div style={{ width: 40, height: 3, background: p.color, borderRadius: 2, boxShadow: `0 0 14px ${p.color}80`, marginBottom: "1.5rem" }} />
+            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)", color: "#fff", marginBottom: "0.4rem" }}>{p.title}</h3>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: p.color, marginBottom: "1.5rem", letterSpacing: "0.05em" }}>{p.tagline}</p>
+            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "2rem" }}>{p.desc}</p>
 
-            {/* Tech tags */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "2rem" }}>
-              {project.tech.map((t) => (
-                <span key={t} className="tag tag-dark" style={{ borderColor: `${project.accentColor}30`, color: project.accentColor }}>
-                  {t}
-                </span>
-              ))}
+              {p.tech.map(t => <span key={t} className="tag tag-dark" style={{ borderColor: `${p.color}30`, color: p.color }}>{t}</span>)}
             </div>
 
-            {/* Links */}
             <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-              {Object.entries(project.links).map(([label, url]) => (
-                <a
-                  key={label}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-dark"
-                  style={{
-                    fontSize: "0.78rem",
-                    padding: "0.5rem 1rem",
-                    borderColor: `${project.accentColor}40`,
-                    color: project.accentColor,
-                  }}
-                >
+              {Object.entries(p.links).map(([label, url]) => (
+                <a key={label} href={url} target="_blank" rel="noopener noreferrer"
+                  className="btn btn-ghost-dark"
+                  style={{ fontSize: "0.78rem", padding: "0.45rem 1rem", borderColor: `${p.color}45`, color: p.color }}>
                   {label} ↗
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Right: screenshot carousel */}
-          <div className="reveal-right">
-            <Carousel screenshots={project.screenshots} accent={project.accentColor} />
-
-            {/* Diorama concept note */}
-            <div style={{
-              marginTop: "1rem",
-              padding: "0.75rem 1rem",
-              background: "rgba(255,255,255,0.03)",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.05)",
-            }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--stone-600)" }}>
-                Diorama concept:
-              </span>
-              <p style={{ fontSize: "0.8rem", color: "var(--stone-500)", marginTop: "0.2rem" }}>
-                {project.diorama}
-              </p>
-            </div>
+          <div data-right>
+            <Carousel shots={p.shots} color={p.color} />
           </div>
         </div>
 
-        {/* Project dot selector */}
-        <div style={{ display: "flex", gap: "0.5rem", marginTop: "3rem", justifyContent: "center" }}>
-          {projects.map((p, i) => (
-            <div
-              key={p.id}
-              onClick={() => setActive(i)}
-              style={{
-                width: active === i ? "24px" : "8px",
-                height: "8px",
-                borderRadius: "100px",
-                background: active === i ? p.accentColor : "rgba(255,255,255,0.15)",
-                cursor: "pointer",
-                transition: "all 0.3s var(--ease-out-expo)",
-              }}
-            />
+        {/* Dot selector */}
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginTop: "3rem" }}>
+          {projects.map((pr, i) => (
+            <div key={pr.id} onClick={() => setActive(i)} style={{
+              width: active === i ? 22 : 7, height: 7, borderRadius: 100,
+              background: active === i ? pr.color : "rgba(255,255,255,0.15)",
+              cursor: "pointer", transition: "all 0.3s ease",
+            }} />
           ))}
         </div>
       </div>

@@ -1,256 +1,136 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
 
-interface LogLine { text: string; type: "sys" | "ok" | "warn" | "cmd" }
-
-const BOOT_SEQUENCE: LogLine[] = [
+const BOOT: Array<{text: string; type: string}> = [
   { text: "J.A.R.V.I.S v4.1 — Gemini Core Active", type: "sys" },
-  { text: "Loading speech recognition engine...", type: "sys" },
   { text: "SpeechRecognition: [ENABLED]", type: "ok" },
   { text: "pyttsx3 TTS: [ENABLED]", type: "ok" },
   { text: "Particle visualizer: [ACTIVE]", type: "ok" },
   { text: "Gemini API connection: [SECURE]", type: "ok" },
-  { text: "Terminal ready. Type a command.", type: "warn" },
+  { text: "Terminal ready. Type a command below.", type: "warn" },
 ];
-
-const COMMANDS: Record<string, LogLine[]> = {
-  about: [
-    { text: "Danyal Tanveer — Final-year CS @ UCP", type: "ok" },
-    { text: "Full-Stack Dev + NLP/ML Engineer", type: "sys" },
-  ],
-  skills: [
-    { text: "→ Languages: JS/TS, Python, SQL, C++, Kotlin", type: "ok" },
-    { text: "→ AI/ML: RoBERTa, DeBERTa, PySpark", type: "ok" },
-    { text: "→ Stack: Next.js 15, Express, Redis, MongoDB", type: "ok" },
-  ],
-  jarvis: [
-    { text: "J.A.R.V.I.S online. Listening for commands.", type: "warn" },
-    { text: "Gemini model: gemini-1.5-flash", type: "sys" },
-    { text: "Voice channel: OPEN", type: "ok" },
-  ],
-  help: [
-    { text: "Commands: about | skills | jarvis | clear", type: "sys" },
-  ],
-  clear: [],
+const CMDS: Record<string, Array<{text: string; type: string}>> = {
+  about:    [{ text: "Danyal Tanveer — Final-year CS @ UCP. Full-Stack + NLP/ML Engineer.", type: "ok" }],
+  skills:   [{ text: "→ JS/TS, Python, SQL, Kotlin, C++", type: "ok" }, { text: "→ Next.js 15, Express, Django, Redis", type: "ok" }, { text: "→ RoBERTa, DeBERTa, PySpark, PyTorch", type: "ok" }],
+  jarvis:   [{ text: "J.A.R.V.I.S ONLINE. Voice channel: OPEN. Particle sphere ACTIVATING...", type: "warn" }],
+  projects: [{ text: "→ TRAK · POS Ecosystem · BERT Benchmark · NIDS · J.A.R.V.I.S", type: "ok" }],
+  help:     [{ text: "Commands: about | skills | jarvis | projects | clear", type: "sys" }],
+  clear:    [],
 };
 
-// Canvas particle sphere
-function ParticleSphere({ active }: { active: boolean }) {
+function Sphere({ active }: { active: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const S = 280;
-    canvas.width = S;
-    canvas.height = S;
-    const cx = S / 2, cy = S / 2, R = 100;
-
-    type P = { theta: number; phi: number; speed: number };
-    const pts: P[] = Array.from({ length: 220 }, () => ({
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d")!;
+    const S = 260; c.width = S; c.height = S;
+    const cx = S/2, cy = S/2, R = 95;
+    type P = { theta: number; phi: number; spd: number };
+    const pts: P[] = Array.from({ length: 200 }, () => ({
       theta: Math.random() * Math.PI * 2,
       phi: Math.acos(2 * Math.random() - 1),
-      speed: 0.004 + Math.random() * 0.005,
+      spd: 0.004 + Math.random() * 0.005,
     }));
-
     let frame = 0, raf: number;
     const draw = () => {
       frame++;
       ctx.clearRect(0, 0, S, S);
-
-      const breathe = 1 + Math.sin(frame * 0.02) * 0.05;
-      const r = R * breathe;
-
-      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r + 30);
-      grd.addColorStop(0, active ? "rgba(46,196,182,0.12)" : "rgba(99,102,241,0.06)");
+      const b = 1 + Math.sin(frame * 0.02) * 0.05;
+      const r = R * b;
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r + 28);
+      grd.addColorStop(0, active ? "rgba(46,196,182,0.14)" : "rgba(99,102,241,0.07)");
       grd.addColorStop(1, "transparent");
       ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r + 32, 0, Math.PI * 2);
-      ctx.fill();
-
-      pts.forEach((p) => {
-        p.theta += p.speed * (active ? 1.8 : 1);
+      ctx.beginPath(); ctx.arc(cx, cy, r + 30, 0, Math.PI * 2); ctx.fill();
+      pts.forEach(p => {
+        p.theta += p.spd * (active ? 2 : 1);
         const x = cx + r * Math.sin(p.phi) * Math.cos(p.theta);
         const y = cy + r * Math.cos(p.phi);
-        const depth = (Math.sin(p.phi) * Math.cos(p.theta) + 1) / 2;
-        const size = 1 + depth * 2;
-        const alpha = 0.2 + depth * 0.65;
-
+        const d = (Math.sin(p.phi) * Math.cos(p.theta) + 1) / 2;
         ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = active
-          ? `rgba(46,196,182,${alpha})`
-          : `rgba(99,102,241,${alpha})`;
+        ctx.arc(x, y, 1 + d * 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = active ? `rgba(46,196,182,${0.2 + d * 0.7})` : `rgba(99,102,241,${0.2 + d * 0.6})`;
         ctx.fill();
       });
-
       raf = requestAnimationFrame(draw);
     };
     draw();
     return () => cancelAnimationFrame(raf);
   }, [active]);
-
-  return (
-    <canvas ref={canvasRef} style={{ display: "block", margin: "0 auto" }} aria-hidden="true" />
-  );
+  return <canvas ref={canvasRef} style={{ display: "block", margin: "0 auto" }} aria-hidden />;
 }
 
 export default function Philosophy() {
-  const [logs, setLogs] = useState<LogLine[]>(BOOT_SEQUENCE);
-  const [jarvisActive, setJarvisActive] = useState(false);
+  const [logs, setLogs] = useState(BOOT);
+  const [jarvis, setJarvis] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const run = (cmd: string) => {
     const key = cmd.trim().toLowerCase();
-    if (key === "clear") {
-      setLogs([]);
-      setJarvisActive(false);
-      return;
-    }
-    if (key === "jarvis") setJarvisActive(true);
-    const out = COMMANDS[key] ?? [{ text: `Command not found: ${key}. Try 'help'`, type: "warn" as const }];
-    setLogs((prev) => [
-      ...prev,
-      { text: `$ ${cmd}`, type: "cmd" },
-      ...out,
-    ]);
+    if (key === "clear") { setLogs([]); setJarvis(false); return; }
+    if (key === "jarvis") setJarvis(true);
+    const out = CMDS[key] ?? [{ text: `Unknown command: "${key}". Try 'help'.`, type: "warn" }];
+    setLogs(prev => [...prev, { text: `$ ${cmd}`, type: "cmd" }, ...out]);
   };
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs]);
 
-  const logColors: Record<string, string> = {
-    sys: "#94a3b8",
-    ok: "#2ec4b6",
-    warn: "#f59e0b",
-    cmd: "#e2e8f0",
-  };
+  const C: Record<string, string> = { sys: "#6b7280", ok: "#2ec4b6", warn: "#f59e0b", cmd: "#e2e8f0" };
 
   return (
-    <section className="section section-dark section-padding" data-section="5">
+    <section className="section section-dark section-pad" data-section="5">
       <div className="container">
 
-        {/* Header */}
         <div style={{ marginBottom: "4rem" }}>
-          <div className="label-mono reveal-up" style={{ color: "var(--accent-soft)", marginBottom: "0.75rem" }}>
-            Chapter VI — Philosophy
-          </div>
-          <h2 className="heading-large reveal-up" style={{ color: "#fff" }}>
+          <div className="label" data-up style={{ color: "var(--accent-soft)", marginBottom: "0.75rem" }}>Chapter VI — Philosophy</div>
+          <h2 data-up style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff", lineHeight: 1.05 }}>
             Cognitive<br />
-            <span className="text-gradient-accent">Synthesis.</span>
+            <span style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-soft))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Synthesis.</span>
           </h2>
         </div>
 
         <div className="grid-2" style={{ alignItems: "start", gap: "4rem" }}>
 
-          {/* Left: Philosophy text + sphere */}
-          <div className="reveal-left">
-            <p style={{ color: "var(--stone-400)", fontSize: "1.05rem", lineHeight: 1.8, marginBottom: "1.5rem" }}>
-              Software should be active, intelligent storytelling — not passive logic. My work bridges systems engineering (APIs, cache, distributed computation) with applied NLP research.
+          {/* Left: philosophy + sphere */}
+          <div data-left>
+            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1.02rem", lineHeight: 1.85, marginBottom: "1.5rem" }}>
+              Software should be active, intelligent storytelling — not passive logic. My work bridges systems engineering with applied NLP research.
             </p>
-            <p style={{ color: "var(--stone-400)", fontSize: "1.05rem", lineHeight: 1.8, marginBottom: "3rem" }}>
-              J.A.R.V.I.S is the physical manifestation of this synthesis: a Gemini-powered desktop AI that hears your voice, reasons, and responds — all from a local Python process.
+            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1.02rem", lineHeight: 1.85, marginBottom: "3rem" }}>
+              J.A.R.V.I.S is that synthesis — a Gemini-powered desktop AI that hears, reasons, and responds. Run the <code style={{ color: "var(--teal)", fontSize: "0.85rem" }}>jarvis</code> command to activate its particle sphere.
             </p>
-
-            <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <ParticleSphere active={jarvisActive} />
-              <div style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.68rem",
-                color: jarvisActive ? "#2ec4b6" : "#6366f1",
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                marginTop: "0.75rem",
-                transition: "color 0.5s ease",
-              }}>
-                {jarvisActive ? "J.A.R.V.I.S — ONLINE" : "Particle Sphere — Idle"}
+            <div style={{ textAlign: "center" }}>
+              <Sphere active={jarvis} />
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: "0.75rem", color: jarvis ? "var(--teal)" : "#6366f1", transition: "color 0.6s" }}>
+                {jarvis ? "J.A.R.V.I.S — ONLINE" : "Particle Sphere — Idle"}
               </div>
             </div>
           </div>
 
-          {/* Right: Terminal */}
-          <div className="reveal-right">
-            <div className="terminal" style={{ height: "400px", display: "flex", flexDirection: "column" }}>
-              {/* Terminal bar */}
+          {/* Right: terminal */}
+          <div data-right>
+            <div className="terminal" style={{ display: "flex", flexDirection: "column", height: "420px" }}>
               <div className="terminal-bar">
-                <div className="terminal-dot" style={{ background: "#ef4444" }} />
-                <div className="terminal-dot" style={{ background: "#f59e0b" }} />
-                <div className="terminal-dot" style={{ background: "#22c55e" }} />
-                <span style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.65rem",
-                  color: "#4b5563",
-                  marginLeft: "0.75rem",
-                }}>
-                  jarvis@danyal-os:~
-                </span>
+                <div className="tdot" style={{ background: "#ef4444" }} />
+                <div className="tdot" style={{ background: "#f59e0b" }} />
+                <div className="tdot" style={{ background: "#22c55e" }} />
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "#4b5563", marginLeft: "0.75rem" }}>jarvis@danyal-os:~</span>
               </div>
-
-              {/* Log output */}
-              <div style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "1rem 1.25rem",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.74rem",
-                lineHeight: 1.6,
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.2rem",
-              }}>
+              <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.25rem", fontFamily: "var(--font-mono)", fontSize: "0.73rem", lineHeight: 1.65, display: "flex", flexDirection: "column", gap: "0.2rem" }}>
                 {logs.map((l, i) => (
-                  <div key={i} style={{ color: logColors[l.type] ?? "#94a3b8" }}>
-                    {l.type === "cmd" ? (
-                      <span>
-                        <span style={{ color: "#2ec4b6", marginRight: "0.4rem" }}>❯</span>
-                        {l.text.replace("$ ", "")}
-                      </span>
-                    ) : l.text}
+                  <div key={i} style={{ color: C[l.type] ?? "#6b7280" }}>
+                    {l.type === "cmd" ? <span><span style={{ color: "#2ec4b6", marginRight: "0.4rem" }}>❯</span>{l.text.slice(2)}</span> : l.text}
                   </div>
                 ))}
                 <div ref={bottomRef} />
               </div>
-
-              {/* Command buttons */}
-              <div style={{
-                padding: "0.6rem 1rem",
-                background: "#101010",
-                borderTop: "1px solid rgba(255,255,255,0.04)",
-                display: "flex",
-                gap: "0.4rem",
-                flexWrap: "wrap",
-              }}>
-                {["about", "skills", "jarvis", "help", "clear"].map((cmd) => (
-                  <button
-                    key={cmd}
-                    type="button"
-                    onClick={() => run(cmd)}
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: cmd === "jarvis" ? "#2ec4b6" : "#64748b",
-                      padding: "0.28rem 0.65rem",
-                      borderRadius: "5px",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.68rem",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(46,196,182,0.08)";
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(46,196,182,0.3)";
-                      (e.currentTarget as HTMLButtonElement).style.color = "#2ec4b6";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)";
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.08)";
-                      (e.currentTarget as HTMLButtonElement).style.color = cmd === "jarvis" ? "#2ec4b6" : "#64748b";
-                    }}
+              <div style={{ padding: "0.55rem 1rem", background: "#111", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {["about","skills","jarvis","projects","help","clear"].map(cmd => (
+                  <button key={cmd} type="button" onClick={() => run(cmd)}
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: cmd === "jarvis" ? "#2ec4b6" : "#555", padding: "0.26rem 0.62rem", borderRadius: 5, fontFamily: "var(--font-mono)", fontSize: "0.67rem", cursor: "pointer", transition: "all 0.2s" }}
+                    onMouseEnter={e => { (e.target as HTMLButtonElement).style.color = "#2ec4b6"; (e.target as HTMLButtonElement).style.borderColor = "rgba(46,196,182,0.3)"; }}
+                    onMouseLeave={e => { (e.target as HTMLButtonElement).style.color = cmd === "jarvis" ? "#2ec4b6" : "#555"; (e.target as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.07)"; }}
                   >
                     {cmd}
                   </button>
