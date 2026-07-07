@@ -34,7 +34,7 @@ export const projects: Project[] = [
       '/projects/trak/12.png',
       '/projects/trak/13.png',
       '/projects/trak/14.png',
-      '/projects/trak/15.png'
+      '/projects/trak/15.jpeg'
     ],
     accentColor: '#06b6d4', // Teal-cyan
   },
@@ -43,7 +43,7 @@ export const projects: Project[] = [
     title: 'POS Ecosystem',
     tagline: 'Three connected repos powering two live restaurant clients',
     description: 'A commercial-grade Point of Sale (POS) ecosystem deployed across two live restaurant clients. Incorporates a dynamic React customer frontend, a management dashboard (POS-Admin), and a high-performance Express API cached with Redis.',
-    tech: ['Next.js 15', 'Express', 'MongoDB', 'JWT', 'Redis', 'Swagger'],
+    tech: ['Next.js 16', 'Express', 'MongoDB', 'JWT', 'Redis', 'Swagger'],
     dioramaConcept: 'Linked terminals showing order feeds and glow paths.',
     links: { pos: 'https://github.com/Danyal-0276/POS-client', admin: 'https://github.com/Danyal-0276/POS-Admin', api: 'https://github.com/Danyal-0276/POS-backend' },
     screenshots: [

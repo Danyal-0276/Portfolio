@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
@@ -8,7 +8,7 @@ const skills = [
   { name: "JavaScript / TypeScript", level: 95, cat: "Languages", color: "#e63946" },
   { name: "Python",                  level: 90, cat: "Languages", color: "#e63946" },
   { name: "Kotlin / SQL / C++",      level: 76, cat: "Languages", color: "#e63946" },
-  { name: "Next.js 15",              level: 93, cat: "Frameworks", color: "#6366f1" },
+  { name: "Next.js 16",              level: 93, cat: "Frameworks", color: "#6366f1" },
   { name: "React / React Native",    level: 91, cat: "Frameworks", color: "#6366f1" },
   { name: "Django / Express",        level: 86, cat: "Frameworks", color: "#6366f1" },
   { name: "HuggingFace Transformers",level: 83, cat: "AI / ML", color: "#2ec4b6" },
@@ -24,20 +24,20 @@ export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   const barsRef = useRef<HTMLDivElement>(null);
 
-  const filtered = skills.filter(s => s.cat === cat);
+  const filtered = useMemo(() => skills.filter(s => s.cat === cat), [cat]);
   const color = filtered[0]?.color ?? "#e63946";
 
-  const animateBars = () => {
+  const animateBars = useCallback(() => {
     if (!barsRef.current) return;
     const fills = barsRef.current.querySelectorAll<HTMLDivElement>(".skill-bar-fill");
     gsap.fromTo(fills,
       { width: "0%" },
       { width: (i: number) => `${filtered[i]?.level ?? 0}%`, duration: 1.1, ease: "power3.out", stagger: 0.07 }
     );
-  };
+  }, [filtered]);
 
   // Animate on category change
-  useEffect(() => { animateBars(); }, [cat]);
+  useEffect(() => { animateBars(); }, [animateBars]);
 
   // Animate on scroll enter
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function Skills() {
       });
     }, sectionRef);
     return () => ctx.revert();
-  }, []);
+  }, [animateBars]);
 
   return (
     <section ref={sectionRef} className="section section-warm section-pad" data-section="2">

@@ -11,7 +11,7 @@ const BOOT: Array<{text: string; type: string}> = [
 ];
 const CMDS: Record<string, Array<{text: string; type: string}>> = {
   about:    [{ text: "Danyal Tanveer — Final-year CS @ UCP. Full-Stack + NLP/ML Engineer.", type: "ok" }],
-  skills:   [{ text: "→ JS/TS, Python, SQL, Kotlin, C++", type: "ok" }, { text: "→ Next.js 15, Express, Django, Redis", type: "ok" }, { text: "→ RoBERTa, DeBERTa, PySpark, PyTorch", type: "ok" }],
+  skills:   [{ text: "→ JS/TS, Python, SQL, Kotlin, C++", type: "ok" }, { text: "→ Next.js 16, Express, Django, Redis", type: "ok" }, { text: "→ RoBERTa, DeBERTa, PySpark, PyTorch", type: "ok" }],
   jarvis:   [{ text: "J.A.R.V.I.S ONLINE. Voice channel: OPEN. Particle sphere ACTIVATING...", type: "warn" }],
   projects: [{ text: "→ TRAK · POS Ecosystem · BERT Benchmark · NIDS · J.A.R.V.I.S", type: "ok" }],
   help:     [{ text: "Commands: about | skills | jarvis | projects | clear", type: "sys" }],
@@ -64,7 +64,7 @@ function Sphere({ active }: { active: boolean }) {
 export default function Philosophy() {
   const [logs, setLogs] = useState(BOOT);
   const [jarvis, setJarvis] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const logViewportRef = useRef<HTMLDivElement>(null);
 
   const run = (cmd: string) => {
     const key = cmd.trim().toLowerCase();
@@ -74,7 +74,11 @@ export default function Philosophy() {
     setLogs(prev => [...prev, { text: `$ ${cmd}`, type: "cmd" }, ...out]);
   };
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs]);
+  useEffect(() => {
+    const logViewport = logViewportRef.current;
+    if (!logViewport || logs.length <= BOOT.length) return;
+    logViewport.scrollTo({ top: logViewport.scrollHeight, behavior: "smooth" });
+  }, [logs]);
 
   const C: Record<string, string> = { sys: "#6b7280", ok: "#2ec4b6", warn: "#f59e0b", cmd: "#e2e8f0" };
 
@@ -117,13 +121,12 @@ export default function Philosophy() {
                 <div className="tdot" style={{ background: "#22c55e" }} />
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "#4b5563", marginLeft: "0.75rem" }}>jarvis@danyal-os:~</span>
               </div>
-              <div style={{ flex: 1, overflowY: "auto", padding: "1rem 1.25rem", fontFamily: "var(--font-mono)", fontSize: "0.73rem", lineHeight: 1.65, display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+              <div ref={logViewportRef} style={{ flex: 1, overflowY: "auto", padding: "1rem 1.25rem", fontFamily: "var(--font-mono)", fontSize: "0.73rem", lineHeight: 1.65, display: "flex", flexDirection: "column", gap: "0.2rem" }}>
                 {logs.map((l, i) => (
                   <div key={i} style={{ color: C[l.type] ?? "#6b7280" }}>
                     {l.type === "cmd" ? <span><span style={{ color: "#2ec4b6", marginRight: "0.4rem" }}>❯</span>{l.text.slice(2)}</span> : l.text}
                   </div>
                 ))}
-                <div ref={bottomRef} />
               </div>
               <div style={{ padding: "0.55rem 1rem", background: "#111", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
                 {["about","skills","jarvis","projects","help","clear"].map(cmd => (

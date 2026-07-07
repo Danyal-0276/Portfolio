@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
@@ -21,26 +21,24 @@ export default function Research() {
   const sectionRef = useRef<HTMLElement>(null);
   const chartRef   = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [animated, setAnimated] = useState(false);
 
   const maxAcc = Math.max(...models.map(m => m.acc));
 
-  const runBars = () => {
+  const runBars = useCallback(() => {
     if (!chartRef.current) return;
     const bars = chartRef.current.querySelectorAll<HTMLDivElement>(".res-bar");
     gsap.fromTo(bars,
       { scaleY: 0 },
       { scaleY: 1, duration: 1.1, ease: "power3.out", stagger: 0.05, transformOrigin: "bottom center" }
     );
-    setAnimated(true);
-  };
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       ScrollTrigger.create({ trigger: sectionRef.current, start: "top 68%", onEnter: runBars });
     }, sectionRef);
     return () => ctx.revert();
-  }, []);
+  }, [runBars]);
 
   return (
     <section ref={sectionRef} className="section section-light section-pad" data-section="4">

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 
 const projects = [
   {
@@ -16,8 +17,8 @@ const projects = [
     id: "pos",
     title: "POS Ecosystem",
     tagline: "Three repos · two live restaurant clients",
-    desc: "Commercial-grade point-of-sale — Next.js 15 customer frontend, management dashboard, and a high-performance Express API with Redis caching and Swagger docs.",
-    tech: ["Next.js 15","Express","MongoDB","Redis","JWT","Swagger"],
+    desc: "Commercial-grade point-of-sale — Next.js 16 customer frontend, management dashboard, and a high-performance Express API with Redis caching and Swagger docs.",
+    tech: ["Next.js 16","Express","MongoDB","Redis","JWT","Swagger"],
     links: { "Client": "https://github.com/Danyal-0276/POS-client", "Admin": "https://github.com/Danyal-0276/POS-Admin", "API": "https://github.com/Danyal-0276/POS-backend" },
     shots: ["/projects/pos/1.jpeg","/projects/pos/2.jpeg","/projects/pos/3.jpeg"],
     color: "#f59e0b",
@@ -63,7 +64,7 @@ function Carousel({ shots, color }: { shots: string[]; color: string }) {
   );
   return (
     <div className="carousel">
-      <img src={shots[idx]} alt="" />
+      <Image src={shots[idx]} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "contain" }} />
       {shots.length > 1 && (
         <>
           <button className="carousel-btn" style={{ left: 8 }} onClick={() => setIdx(i => (i - 1 + shots.length) % shots.length)}>‹</button>

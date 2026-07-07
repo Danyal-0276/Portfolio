@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Nav from "@/components/dom/Nav";
 import CursorGlow from "@/components/background/CursorGlow";
 
@@ -48,7 +49,7 @@ export default function Home() {
 
     // Wire Lenis → GSAP ticker (correct pattern for Lenis 1.x)
     function raf(time: number) {
-      lenis.raf(time);
+      lenis.raf(time * 1000);
       ScrollTrigger.update();
     }
     gsap.ticker.add(raf);
@@ -74,13 +75,14 @@ export default function Home() {
 
     // Wait two frames so the DOM is fully painted
     let rafId: number;
+    let ctx: gsap.Context | undefined;
     const setup = () => {
       rafId = requestAnimationFrame(() => {
         rafId = requestAnimationFrame(() => {
-          const ctx = gsap.context(() => {
+          ctx = gsap.context(() => {
 
             // ── Animate all [data-up] elements ──
-            gsap.utils.toArray<HTMLElement>("[data-up]").forEach((el, i) => {
+            gsap.utils.toArray<HTMLElement>("[data-up]").forEach((el) => {
               const delay = Number(el.dataset.delay ?? 0);
               gsap.fromTo(el,
                 { y: 55, opacity: 0 },
@@ -171,14 +173,15 @@ export default function Home() {
             ScrollTrigger.refresh();
 
           }, mainRef);
-
-          return () => ctx.revert();
         });
       });
     };
 
     setup();
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      ctx?.revert();
+    };
   }, [ready]);
 
   const isDark = DARK_SECTIONS.has(activeSection);
@@ -232,7 +235,7 @@ export default function Home() {
         className={`header ${isDark ? "dark" : ""} ${headerScrolled ? "scrolled" : ""}`}
       >
         <a href="#" className="header-brand" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-          <img src="/logo.png" alt="DT" style={{ width: 26, height: 26, borderRadius: 6, objectFit: "contain" }} />
+          <Image src="/logo.png" alt="DT" width={26} height={26} style={{ borderRadius: 6, objectFit: "contain" }} />
           <span>Danyal Tanveer</span>
         </a>
         <a

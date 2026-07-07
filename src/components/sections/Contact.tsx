@@ -65,7 +65,7 @@ export default function Contact() {
             Full-Stack Developer · NLP/ML Researcher · UCP 2026
           </div>
           <div style={{ marginTop: "1.5rem", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--stone-300)" }}>
-            Built with Next.js 15 · React Three Fiber · GSAP · Lenis
+            Built with Next.js 16 · React Three Fiber · GSAP · Lenis
           </div>
           <div style={{ width: 1, height: 50, background: "linear-gradient(180deg, var(--accent), transparent)", margin: "1.5rem auto 0", opacity: 0.4 }} />
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "var(--stone-300)" }}>end_of_corridor</div>

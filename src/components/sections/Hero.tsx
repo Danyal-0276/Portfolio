@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Sphere, Torus, Box, OrbitControls } from "@react-three/drei";
+import { Float, MeshDistortMaterial, Sphere, Torus, Box } from "@react-three/drei";
 import * as THREE from "three";
 import { gsap } from "gsap";
 
@@ -10,9 +10,8 @@ import { gsap } from "gsap";
 function FloatingShapes({ mouse }: { mouse: React.MutableRefObject<[number, number]> }) {
   const groupRef = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!groupRef.current) return;
-    const t = state.clock.elapsedTime;
     // Gentle mouse parallax
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
@@ -86,9 +85,12 @@ function Particles() {
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 12;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
+      const a = Math.sin((i + 1) * 12.9898) * 43758.5453;
+      const b = Math.sin((i + 1) * 78.233) * 24634.6345;
+      const c = Math.sin((i + 1) * 39.425) * 13523.2348;
+      arr[i * 3] = ((a - Math.floor(a)) - 0.5) * 12;
+      arr[i * 3 + 1] = ((b - Math.floor(b)) - 0.5) * 10;
+      arr[i * 3 + 2] = ((c - Math.floor(c)) - 0.5) * 8 - 2;
     }
     return arr;
   }, []);
