@@ -46,7 +46,13 @@ export default function ProjectsChapter() {
         const info = beat.querySelector('.project-info');
         const start = 0.08 + i * beatDur;
 
+        const accent = beat.getAttribute('data-accent') ?? '#06b6d4';
+        const bgColor = beat.getAttribute('data-bg') ?? '#060810';
+
         tl.set(beat, { visibility: 'visible', autoAlpha: i === 0 ? 1 : 0 }, start);
+        if (worldBg) tl.to(worldBg, { backgroundColor: bgColor, duration: beatDur * 0.2 }, start);
+        if (worldOrb1) tl.to(worldOrb1, { backgroundColor: accent, duration: beatDur * 0.2 }, start);
+        if (worldOrb2) tl.to(worldOrb2, { backgroundColor: accent, opacity: 0.35, duration: beatDur * 0.2 }, start);
         if (i > 0) {
           tl.to(beats[i - 1], { autoAlpha: 0, y: -80, duration: beatDur * 0.3 }, start);
         }
