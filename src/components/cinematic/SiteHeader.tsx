@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { scrollToSection } from '@/lib/useCinematicScroll';
 
 const NAV = [
   { label: 'Home', href: '#hero' },
   { label: 'Origin', href: '#origin' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Showcase', href: '#showcase' },
+  { label: 'Voyage', href: '#voyage' },
   { label: 'Research', href: '#research' },
   { label: 'Philosophy', href: '#philosophy' },
   { label: 'Contact', href: '#contact' },
@@ -25,7 +25,7 @@ export default function SiteHeader({ scrolled }: SiteHeaderProps) {
 
   return (
     <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
-      <a href="#hero" className="site-brand">
+      <a href="#hero" className="site-brand" onClick={(e) => { e.preventDefault(); scrollToSection('#hero'); }}>
         <Image src="/logo.png" alt="DT" width={28} height={28} className="rounded-md" />
         <span>Danyal Tanveer</span>
       </a>
@@ -50,7 +50,11 @@ export default function SiteHeader({ scrolled }: SiteHeaderProps) {
                     href={item.href}
                     className="menu-link"
                     style={{ animationDelay: `${i * 0.05}s` }}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setOpen(false);
+                      scrollToSection(item.href);
+                    }}
                   >
                     <span className="menu-index">0{i + 1}</span>
                     {item.label}

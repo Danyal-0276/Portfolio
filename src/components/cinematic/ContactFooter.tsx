@@ -14,15 +14,15 @@ export default function ContactFooter() {
   return (
     <footer id="contact" className="cine-section contact-footer">
       <div className="container-cine">
-        <Badge className="reveal-up">Contact</Badge>
-        <h2 className="cine-heading reveal-up">
+        <Badge data-reveal>Contact</Badge>
+        <h2 className="cine-heading" data-reveal>
           LET&apos;S BUILD<br /><span className="text-lime">SOMETHING GREAT</span>
         </h2>
-        <p className="cine-sub reveal-up">
+        <p className="cine-sub" data-reveal>
           Open to full-stack engineering roles, NLP projects, and technical collaborations.
         </p>
 
-        <div className="contact-grid reveal-stagger">
+        <div className="contact-grid" data-stagger>
           {links.map((l) => (
             <a
               key={l.label}
@@ -39,7 +39,7 @@ export default function ContactFooter() {
           ))}
         </div>
 
-        <div className="footer-bottom reveal-up">
+        <div className="footer-bottom" data-reveal>
           <p className="footer-name">Danyal Tanveer</p>
           <p className="footer-role">Full-Stack Developer · NLP/ML Researcher · UCP 2026</p>
           <p className="footer-tech">Built with Next.js · GSAP · Lenis · shadcn/ui</p>

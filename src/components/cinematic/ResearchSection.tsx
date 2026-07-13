@@ -1,11 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Badge } from '@/components/ui/badge';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const models = [
   { name: 'DeBERTa v3', acc: 93.1, color: '#06b6d4' },
@@ -17,53 +12,31 @@ const models = [
 ];
 
 export default function ResearchSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const barsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const bars = barsRef.current;
-    if (!section || !bars) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        bars.querySelectorAll('.research-bar'),
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          stagger: 0.06,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: section, start: 'top 65%' },
-        },
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   const max = Math.max(...models.map((m) => m.acc));
 
   return (
-    <section id="research" ref={sectionRef} className="cine-section research-section">
+    <section id="research" className="cine-section research-section">
       <div className="container-cine">
-        <Badge className="reveal-up">Research Lab</Badge>
-        <h2 className="cine-heading reveal-up">
+        <Badge data-reveal>Research Lab</Badge>
+        <h2 className="cine-heading" data-reveal>
           BERT<br /><span className="text-lime">SKYLINE</span>
         </h2>
-        <p className="cine-sub reveal-up">
-          10 Transformer architectures on 10K news articles — MCC, AUC-ROC, and ensemble voting.
+        <p className="cine-sub" data-reveal>
+          10 Transformer architectures benchmarked on 10,000 news articles — MCC, AUC-ROC, and ensemble voting.
         </p>
 
         <div className="research-layout">
-          <div ref={barsRef} className="research-chart reveal-up">
+          <div className="research-chart" data-reveal>
             {models.map((m) => {
               const h = ((m.acc - 85) / (max - 85)) * 100;
               return (
                 <div key={m.name} className="research-col">
                   <div
                     className="research-bar"
-                    style={{ height: `${h}%`, background: `linear-gradient(180deg, ${m.color}, ${m.color}88)` }}
+                    style={{
+                      height: `${h}%`,
+                      background: `linear-gradient(180deg, ${m.color}, ${m.color}88)`,
+                    }}
                   />
                   <span className="research-label">{m.acc}%</span>
                   <span className="research-name">{m.name}</span>
@@ -72,7 +45,7 @@ export default function ResearchSection() {
             })}
           </div>
 
-          <div className="research-metrics reveal-stagger">
+          <div className="research-metrics" data-stagger>
             {[
               { l: 'Accuracy', v: '93.1%', c: '#06b6d4' },
               { l: 'MCC Score', v: '0.841', c: '#8b5cf6' },

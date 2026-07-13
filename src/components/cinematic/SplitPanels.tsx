@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -29,7 +30,11 @@ export default function SplitPanels() {
     <section id="split" className="cine-section split-panels">
       <div className="split-grid">
         {panels.map((p) => (
-          <div key={p.id} className="split-panel reveal-up" style={{ '--panel-accent': p.accent } as React.CSSProperties}>
+          <div
+            key={p.id}
+            className="split-panel"
+            style={{ '--panel-accent': p.accent } as CSSProperties}
+          >
             <Badge variant="outline">{p.label}</Badge>
             <h3 className="split-title">{p.title}</h3>
             <p className="split-desc">{p.desc}</p>

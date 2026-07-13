@@ -82,12 +82,12 @@ export default function PhilosophySection() {
   return (
     <section id="philosophy" className="cine-section philosophy-section">
       <div className="container-cine philosophy-grid">
-        <div className="philosophy-left reveal-up">
-          <Badge variant="outline">Philosophy</Badge>
-          <h2 className="cine-heading">
+        <div className="philosophy-left">
+          <Badge variant="outline" data-reveal>Philosophy</Badge>
+          <h2 className="cine-heading" data-reveal>
             COGNITIVE<br /><span className="text-lime">SYNTHESIS</span>
           </h2>
-          <p className="cine-sub">
+          <p className="cine-sub" data-reveal>
             J.A.R.V.I.S — a Gemini-powered desktop AI that hears, reasons, and responds.
             Run <code className="text-lime">jarvis</code> in the terminal.
           </p>
@@ -97,7 +97,7 @@ export default function PhilosophySection() {
           </p>
         </div>
 
-        <div className="philosophy-terminal reveal-up">
+        <div className="philosophy-terminal" data-reveal>
           <div className="terminal-bar">
             <span className="tdot bg-red-500" />
             <span className="tdot bg-amber-500" />

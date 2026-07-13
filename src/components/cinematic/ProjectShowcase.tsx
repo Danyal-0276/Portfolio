@@ -11,12 +11,12 @@ export default function ProjectShowcase() {
   return (
     <section id="showcase" className="cine-section project-showcase">
       <div className="container-cine">
-        <Badge className="reveal-up">Hall of Builds</Badge>
-        <h2 className="cine-heading reveal-up">
+        <Badge data-reveal>Hall of Builds</Badge>
+        <h2 className="cine-heading" data-reveal>
           FLAGSHIP<br /><span className="text-lime">SYSTEMS</span>
         </h2>
 
-        <div className="project-grid reveal-stagger">
+        <div className="project-grid" data-stagger>
           {projects.map((p) => (
             <Card key={p.id} className="project-card group">
               <div className="project-card-media">

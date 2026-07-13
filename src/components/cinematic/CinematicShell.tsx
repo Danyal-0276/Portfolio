@@ -3,166 +3,131 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-import AnimatedBackground from './AnimatedBackground';
+import { motion } from 'framer-motion';
+import { useCinematicScroll } from '@/lib/useCinematicScroll';
+import ChromaBackground from './ChromaBackground';
 import SiteHeader from './SiteHeader';
-import HeroSection from './HeroSection';
+import OrbitalHero from './OrbitalHero';
 import TechMarquee from './TechMarquee';
 import QuoteSection from './QuoteSection';
-import HorizontalGallery from './HorizontalGallery';
-import SplitPanels from './SplitPanels';
-import ProjectShowcase from './ProjectShowcase';
-import ResearchSection from './ResearchSection';
+import ProjectVoyage from './ProjectVoyage';
+import ResearchDeck from './ResearchDeck';
 import PhilosophySection from './PhilosophySection';
 import ContactFooter from './ContactFooter';
+import ScrollProgress from './ScrollProgress';
+import SectionNav from './SectionNav';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function CinematicShell() {
-  const [ready, setReady] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
+  const [loaded, setLoaded] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  useCinematicScroll((y) => setScrolled(y > 60));
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.4, smoothWheel: true });
-
-    lenis.on('scroll', ScrollTrigger.update);
-
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length && value !== undefined) {
-          lenis.scrollTo(value, { immediate: true });
-        }
-        return lenis.scroll;
-      },
-      getBoundingClientRect() {
-        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-      },
-    });
-
-    function raf(time: number) {
-      lenis.raf(time * 1000);
-    }
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    lenis.on('scroll', ({ scroll }: { scroll: number }) => {
-      setScrolled(scroll > 80);
-    });
-
-    const loadTimer = setTimeout(() => {
-      setReady(true);
-      ScrollTrigger.refresh();
-    }, 1600);
-
-    return () => {
-      lenis.destroy();
-      gsap.ticker.remove(raf);
-      ScrollTrigger.scrollerProxy(document.documentElement, {});
-      clearTimeout(loadTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
+    const main = mainRef.current;
+    const loader = loaderRef.current;
+    if (!main || !loader) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.reveal-up').forEach((el) => {
-        const delay = parseFloat(el.dataset.delay ?? '0');
+      // Quote text splits apart on scroll
+      const quote = main.querySelector('.quote-text');
+      if (quote) {
         gsap.fromTo(
-          el,
-          { y: 70, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            delay,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-          },
-        );
-      });
-
-      gsap.utils.toArray<HTMLElement>('.reveal-scale').forEach((el) => {
-        const delay = parseFloat(el.dataset.delay ?? '0');
-        gsap.fromTo(
-          el,
-          { scale: 0.85, opacity: 0 },
+          quote,
+          { scale: 1.2, filter: 'blur(6px)' },
           {
             scale: 1,
-            opacity: 1,
-            duration: 1.1,
-            delay,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+            filter: 'blur(0px)',
+            ease: 'none',
+            scrollTrigger: { trigger: quote, start: 'top bottom', end: 'center center', scrub: 1 },
           },
         );
+      }
+
+      // Section tracking
+      const sectionIds = ['#hero', '#origin', '#voyage', '#research', '#philosophy', '#contact'];
+      sectionIds.forEach((id, i) => {
+        const section = main.querySelector(id);
+        if (!section) return;
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onEnter: () => setActiveSection(i),
+          onEnterBack: () => setActiveSection(i),
+        });
       });
 
-      gsap.utils.toArray<HTMLElement>('.reveal-stagger').forEach((container) => {
-        const children = Array.from(container.children) as HTMLElement[];
-        gsap.fromTo(
-          children,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.85,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: container, start: 'top 82%', toggleActions: 'play none none none' },
-          },
-        );
+      // Loader exit
+      gsap.to(loader, {
+        autoAlpha: 0,
+        duration: 0.9,
+        delay: 1,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          loader.style.display = 'none';
+          setLoaded(true);
+          ScrollTrigger.refresh();
+        },
       });
+    }, main);
 
-      gsap.utils.toArray<HTMLElement>('.hero-line, .hero-badge, .hero-sub, .hero-desc, .hero-actions, .hero-stats, .hero-scroll-hint, .hero-social').forEach((el) => {
-        gsap.fromTo(el, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power4.out', delay: parseFloat(el.dataset.delay ?? '0') + 0.2 });
-      });
-
-      ScrollTrigger.refresh();
-    }, mainRef);
-
-    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 400);
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refresh);
+    const t1 = setTimeout(refresh, 400);
+    const t2 = setTimeout(refresh, 1500);
 
     return () => {
-      clearTimeout(refreshTimer);
+      window.removeEventListener('load', refresh);
+      clearTimeout(t1);
+      clearTimeout(t2);
       ctx.revert();
     };
-  }, [ready]);
-
-  if (!ready) {
-    return (
-      <div className="intro-loader">
-        <AnimatedBackground />
-        <div className="intro-content">
-          <p className="intro-name">DANYAL TANVEER</p>
-          <div className="intro-bar"><div className="intro-bar-fill" /></div>
-          <p className="intro-sub">Loading cinematic experience</p>
-        </div>
-      </div>
-    );
-  }
+  }, []);
 
   return (
-    <div ref={mainRef} className="cinematic-app">
-      <AnimatedBackground />
-      <SiteHeader scrolled={scrolled} />
-      <main className="cinematic-main">
-        <HeroSection />
-        <TechMarquee />
-        <QuoteSection />
-        <HorizontalGallery />
-        <SplitPanels />
-        <ProjectShowcase />
-        <ResearchSection />
-        <PhilosophySection />
-        <ContactFooter />
-      </main>
-    </div>
+    <>
+      <div ref={loaderRef} className="intro-loader">
+        <div className="intro-content">
+          <motion.p
+            className="intro-name"
+            initial={{ letterSpacing: '0.5em', opacity: 0 }}
+            animate={{ letterSpacing: '0.08em', opacity: 1 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+          >
+            DANYAL TANVEER
+          </motion.p>
+          <div className="intro-bar"><div className="intro-bar-fill" /></div>
+          <p className="intro-sub">Calibrating flight path</p>
+        </div>
+      </div>
+
+      <div ref={mainRef} className="cinematic-app">
+        <ChromaBackground />
+        <ScrollProgress />
+        <SiteHeader scrolled={scrolled} />
+        {loaded && <SectionNav active={activeSection} />}
+
+        <main className="cinematic-main">
+          <OrbitalHero />
+          <TechMarquee />
+          <QuoteSection />
+          <ProjectVoyage />
+          <ResearchDeck />
+          <PhilosophySection />
+          <ContactFooter />
+        </main>
+      </div>
+    </>
   );
 }

@@ -1,14 +1,10 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import type { CSSProperties } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { projects } from '@/lib/projects';
 import { Badge } from '@/components/ui/badge';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const moments = projects.flatMap((p) =>
   p.screenshots.slice(0, 2).map((shot, i) => ({
@@ -22,46 +18,19 @@ const moments = projects.flatMap((p) =>
 );
 
 export default function HorizontalGallery() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    if (!section || !track) return;
-
-    const ctx = gsap.context(() => {
-      const scrollWidth = track.scrollWidth - window.innerWidth;
-
-      gsap.to(track, {
-        x: -scrollWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          scrub: 1,
-          end: () => `+=${scrollWidth + 200}`,
-          invalidateOnRefresh: true,
-        },
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="projects" ref={sectionRef} className="cine-section horizontal-gallery">
+    <section id="projects" className="cine-section horizontal-gallery">
       <div className="horizontal-gallery-header">
-        <Badge>Moments · The Build</Badge>
-        <h2 className="cine-heading reveal-up">
+        <Badge data-reveal>Moments · The Build</Badge>
+        <h2 className="cine-heading" data-reveal>
           PROJECT<br /><span className="text-lime">CORRIDOR</span>
         </h2>
-        <p className="cine-sub reveal-up">
-          Scroll horizontally through flagship repos — production systems, ML research, and agentic AI.
+        <p className="cine-sub" data-reveal>
+          Keep scrolling — this section pins and drives sideways through flagship repos.
         </p>
       </div>
 
-      <div ref={trackRef} className="horizontal-track">
+      <div className="horizontal-track">
         {moments.map((m) => (
           <a
             key={m.id}
@@ -72,8 +41,9 @@ export default function HorizontalGallery() {
             style={{ '--accent': m.color } as CSSProperties}
           >
             <div className="moment-card-image">
-              <Image src={m.image} alt={m.title} fill sizes="400px" className="object-cover" />
+              <Image src={m.image} alt={m.title} fill sizes="420px" className="object-cover" />
               <div className="moment-card-overlay" />
+              <span className="moment-card-num">{m.id.split('-')[0].toUpperCase()}</span>
             </div>
             <div className="moment-card-body">
               <span className="moment-card-tag">{m.subtitle}</span>
